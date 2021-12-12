@@ -20,20 +20,25 @@ function Projects({data}: any) {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {data.map((project: any) => (
-                                <TableRow key={project.id}>
-                                    <TableCell component="th" scope="row">
-                                        {project?.name}
-                                    </TableCell>
-                                    <TableCell align="left">
-                                        <Chip color={project?.isApprovedByClient?'success':'error'} label={project?.isApprovedByClient ? 'Aprovado' : 'Não aprovado'}
-                                              variant="outlined"/>
-                                    </TableCell>
-                                    <TableCell align="left">{project?.projectStatus}</TableCell>
-                                    <TableCell align="left">{project?.startDate}</TableCell>
-                                    <TableCell align="left">{project?.client?.name}</TableCell>
-                                </TableRow>
-                            ))}
+                            {data && data?.length > 0 &&
+                                <>
+                                {data.map((project: any) => (
+                                        <TableRow key={project.id}>
+                                            <TableCell component="th" scope="row">
+                                                {project?.name}
+                                            </TableCell>
+                                            <TableCell align="left">
+                                                <Chip color={project?.isApprovedByClient?'success':'error'} label={project?.isApprovedByClient ? 'Aprovado' : 'Não aprovado'}
+                                                      variant="outlined"/>
+                                            </TableCell>
+                                            <TableCell align="left">{project?.projectStatus}</TableCell>
+                                            <TableCell align="left">{project?.startDate}</TableCell>
+                                            <TableCell align="left">{project?.client?.name}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </>
+                            }
+
                         </TableBody>
                     </Table>
                 </TableContainer>
