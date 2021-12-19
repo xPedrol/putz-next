@@ -9,7 +9,7 @@ const api = Axios.create({
     }
 });
 api.interceptors.request.use(function (config) {
-    const authToken = Cookies.get('putz_auth_token');
+    const authToken = Cookies.get(process.env.AUTH_TOKEN_ADRESS ?? '');
     if (authToken && !config.headers!.Authorization) {
         config.headers!.Authorization = `Bearer ${authToken}`;
         // api.defaults.headers.common['Authorization'] = `Bearer ${authToken}`;

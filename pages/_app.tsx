@@ -10,7 +10,8 @@ import {createTheme, ThemeProvider} from '@mui/material/styles';
 import AuthProvider from '../contexts/AuthContext';
 
 function MyApp({Component, pageProps}: AppProps) {
-    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+    const prefersDarkMode = true;
+    // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
     const theme = useMemo(
         () =>

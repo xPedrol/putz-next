@@ -4,7 +4,6 @@ import {getProjects} from '../services/project-service';
 import api from '../config/api';
 
 function Projects({data}: any) {
-
     return (
         <>
             <MainLayout>
@@ -22,13 +21,14 @@ function Projects({data}: any) {
                         <TableBody>
                             {data && data?.length > 0 &&
                                 <>
-                                {data.map((project: any) => (
+                                    {data.map((project: any) => (
                                         <TableRow key={project.id}>
                                             <TableCell component="th" scope="row">
                                                 {project?.name}
                                             </TableCell>
                                             <TableCell align="left">
-                                                <Chip color={project?.isApprovedByClient?'success':'error'} label={project?.isApprovedByClient ? 'Aprovado' : 'Não aprovado'}
+                                                <Chip color={project?.isApprovedByClient ? 'success' : 'error'}
+                                                      label={project?.isApprovedByClient ? 'Aprovado' : 'Não aprovado'}
                                                       variant="outlined"/>
                                             </TableCell>
                                             <TableCell align="left">{project?.projectStatus}</TableCell>
@@ -48,11 +48,9 @@ function Projects({data}: any) {
 }
 
 export async function getServerSideProps(context: any) {
-    // Fetch data from external API
     try {
-        api.defaults.headers.common['Authorization'] = `Bearer ${context.req.cookies.putz_auth_token}`;
+        api.defaults.headers.common['Authorization'] = `Bearer ${context.req.cookies[process.env.AUTH_TOKEN_ADRESS ?? '']}`;
         const res = await getProjects();
-        // Pass data to the page via props
         return {props: {data: res.data}};
     } catch (e) {
         return {props: {data: null}};

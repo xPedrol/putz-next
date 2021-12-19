@@ -1,11 +1,28 @@
 import {createContext, useContext, useEffect, useState} from 'react';
 import {getAccount} from '../services/account-service';
+import {login} from '../services/auth-service';
 import {IAccount} from '../models/account-model';
+import Cookies from 'js-cookie';
 
 const AuthContext = createContext({});
 
-export function useAuth() {
-    return useContext(AuthContext);
+export function useAuth():IAccount {
+    return useContext(AuthContext) as IAccount;
+}
+
+export async function AuthLogin(data: any) {
+    try {
+        const {data: dataRes} = await login(data);
+        if (dataRes?.id_token) {
+            Cookies.set(process.env.AUTH_TOKEN_ADRESS ?? '', dataRes.id_token);
+            return true;
+        } else {
+            return false;
+        }
+    } catch (e) {
+        return false;
+    }
+
 }
 
 function AuthProvider({children}: any) {
@@ -23,9 +40,9 @@ function AuthProvider({children}: any) {
 
 
         try {
-            const account = await getAccount();
-            if (account) {
-                setAccount(account);
+            const {data} = await getAccount();
+            if (data) {
+                setAccount(data);
             }
         } catch (err) {
             console.warn(err);

@@ -3,7 +3,7 @@ import {
     Button,
     Checkbox,
     Container,
-    CssBaseline,
+    FormControl,
     FormControlLabel,
     Grid,
     Link,
@@ -11,14 +11,22 @@ import {
     Typography
 } from '@mui/material';
 import MainLayout from '../../components/Layout';
+import {useForm} from 'react-hook-form';
+import FormError from '../../components/FormError';
+import {AuthLogin} from '../../contexts/AuthContext';
+import Router from 'next/router';
 
-
-function SignIn() {
-
+export default function SignIn() {
+    const {register, handleSubmit, formState: {errors}} = useForm();
+    const caralhoViado = async (data: any) => {
+        const res = await AuthLogin(data);
+        if (res) {
+            Router.push('/projects');
+        }
+    };
     return (
-        <MainLayout>
+        <MainLayout title={'Log in'}>
             <Container component="main" maxWidth="xs">
-                <CssBaseline/>
                 <Box
                     sx={{
                         marginTop: 8,
@@ -28,29 +36,39 @@ function SignIn() {
                     }}
                 >
                     <Typography component="h1" variant="h5">
-                        Sign in
+                        Entrar
                     </Typography>
-                    <Box component="form" noValidate sx={{mt: 1}}>
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="email"
-                            label="Email Address"
-                            name="email"
-                            autoComplete="email"
-                            autoFocus
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
-                        />
+                    <Box onSubmit={handleSubmit(caralhoViado)} component="form" noValidate sx={{mt: 1}}>
+                        <FormControl fullWidth>
+                            <TextField
+                                {...register('username', {required: true})}
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="username"
+                                label="Nome de usuário"
+                                name="username"
+                                autoComplete="username"
+                                autoFocus
+                                error={!!errors.username}
+                            />
+                            {errors.username?.type === 'required' && <FormError>This field is required</FormError>}
+                        </FormControl>
+                        <FormControl fullWidth>
+                            <TextField
+                                {...register('password', {required: true})}
+                                margin="normal"
+                                required
+                                fullWidth
+                                name="password"
+                                label="Senha"
+                                type="password"
+                                id="password"
+                                autoComplete="current-password"
+                                error={!!errors.password}
+                            />
+                            {errors.password?.type === 'required' && <FormError>This field is required</FormError>}
+                        </FormControl>
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary"/>}
                             label="Remember me"
@@ -82,4 +100,3 @@ function SignIn() {
     );
 }
 
-export default SignIn;
